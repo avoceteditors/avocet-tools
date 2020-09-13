@@ -1,0 +1,1 @@
+cdef inline void main()
