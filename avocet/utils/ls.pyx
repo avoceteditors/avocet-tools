@@ -30,14 +30,99 @@
 # Module Imports
 import pathlib
 
+# Local Imports
+from avocet.utils cimport files as fs
+
 # Logger Configuration
 from logging import getLogger
 logger = getLogger(__name__)
 
+cdef list eval_files(list files):
+    """Evaluates the given files into specific file types 
+    like RST and Markdown."""
+    cdef list paths = []
+    cdef object path
 
-cdef list find(list sources, str wdir):
-    pass
+    # File Extensions
+    cdef list rst = [".rst", '.restructuredtext']
+    cdef list md = ['.md', '.markdown']
+    cdef list xml = ['.xml', '.docbook']
+    cdef list json = ['json']
+    cdef list img = ['.png', '.jpeg', '.svg']
+
+    # Iterate over Files from Argument
+    for path in files:
+
+        # Find reStructuredText File
+        if path.suffix in rst:
+            paths.append(fs.RSTSourceFileType(path))
+
+        # Find Markdown File
+        elif path.suffix in md:
+            paths.append(fs.MDSourceFileType(path))
+
+        # Find XML File
+        elif path.suffix in xml:
+            paths.append(fs.XMLSourceFileType(path))
+
+        # Find JSON File
+        elif path.suffix in json:
+            paths.append(fs.JSONSourceFileType(path))
+
+        # Find Image Resource File
+        elif path.suffix in img:
+            paths.append(fs.ImageResourceFileType(path))
+
+        # Other Resource
+        else:
+            paths.append(fs.OtherResourceFileType(path))
+
+    return paths
+    
+cdef list find(list sources, str wdir="."):
+    """Receives list of source paths and working directory,
+    returns list of files and files in directories for further
+    analysis."""
+
+    # Initialize Variables
+    cdef list files = []
+    cdef str src 
+    cdef object path, sub_path
+
+    # Set Default Sources
+    if len(sources) == 0:
+        sources = [wdir]
+
+    # Iterate over Source Paths
+    for src in sources:
+        path = pathlib.Path(src)
+
+        # Check if Path Exists
+        if path.exists():
+
+            if path.is_file():
+                files.append(path)
+            elif path.is_dir():
+                for sub_path in path.rglob("*"):
+                    files.append(sub_path)
+
+        # Warn User on non-existent files
+        else:
+            logger.error(f"Received non-existent file argument: {src}")
+
+    # Log Files
+    logger.debug(f"Found {len(files)} files")
+
+    # Return Value
+    return eval_files(files)
 
 cdef void run(object args):
     """Function used to run ``ls`` operations from the command-line"""
     logger.info("Called ls operation")
+
+    cdef list paths = find(args.source, args.working_dir)
+
+    cdef fs.FileType path
+
+    for path in paths:
+        print(path)
