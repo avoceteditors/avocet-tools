@@ -22,7 +22,7 @@ cdef class FileType(object):
              f"Last Modified (Unix): {self.stat_mtime}",
              f"Last Modified (Date): {self.mtime}",
              f"Size (File System):   {self.stat_size}B",
-             f"size (Readable):      {self.size}"
+             f"Size (Readable):      {self.size}"
              ])
 
     def check(object self):
