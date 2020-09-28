@@ -30,58 +30,34 @@
 # Module Imports
 import datetime
 
-####################### FILETYPE CONFIGURATION ##################################
-cdef class FileType(object):
+# Local Imports
+cimport avocet.xml.common as com
 
-    def __init__(object self, object path):
-        self.path = path.absolute()
-        self.suffix = path.suffix
-        self.base = path.stem
-        self.parent = path.parent
 
-        # Update Metadata
-        self.update()
+cdef void set_system_data(object element, object path):
 
-    def __repr__(object self):
-            return f"{self.__class__.__name__}: {str(self.path)}"
+    # Initialize Metadata
+    cdef list metadata = [(com.dion_path, str(path))]
 
-    def __str__(object self):
-        return "\n  ".join(
-            [f"{self.__class__.__name__}: {str(self.path)}",
-             f"Name:                 {self.base}",
-             f"Parent:               {str(self.parent)}",
-             f"Last Modified (Unix): {self.stat_mtime}",
-             f"Last Modified (Date): {self.mtime}",
-             f"Size (File System):   {self.stat_size}B",
-             f"Size (Readable):      {self.size}"
-             ])
+    # Collect Stats
+    stats = path.stat()
 
-    def check(object self):
-        return self.path.stat().st_mtime > self.mtime 
+    ############## Last Modified ################# 
+    cdef int mtime = stats.st_mtime
+    metadata.append((com.dion_mtime, str(mtime)))
 
-    def update(object self):
+    # Logical Mtime 
+    cdef str lmtime = datetime.datetime.fromtimestamp(mtime).strftime(com.date_format)
+    metadata.append((com.dion_lmtime, lmtime))
 
-        stat = self.path.stat()
+    # Logical Year
+    cdef str ymtime = datetime.datetime.fromtimestamp(mtime).strftime(com.year_format)
+    metadata.append((com.dion_year, ymtime))
 
-        # Set Last Modified
-        self.stat_mtime = stat.st_mtime
-        date = datetime.datetime.fromtimestamp(self.stat_mtime)
-        self.mtime = date.strftime("%A, %B %d, %Y")
-        self.year = date.strftime("%Y")
+    for (attr, value) in metadata:
+        element.set(attr, value)
 
-        # File Size
-        self.stat_size = stat.st_size
 
-        cdef float size
-        cdef str unit
-        if self.stat_size > 1000000:
-            size = 1000000 / self.stat_size
-            unit = "MB"
-        elif self.stat_size > 1000:
-            size = 1000 / self.stat_size
-            unit = "KB"
-        else:
-            size = self.stat_size
-            unit = "B"
 
-        self.size = f"{int(size)}{unit}"
+
+

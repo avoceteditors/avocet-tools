@@ -1,6 +1,8 @@
 CALL=python3 setup.py 
 
-all: dev-install run 
+all: dev-install 
+
+run: run-parse
 
 dev-install:
 	@$(CALL) build_ext 
@@ -18,5 +20,9 @@ python-clean:
 cython-clean:
 	@rm avocet/*/*.c
 
-run:
+
+run-ls:
 	avocet -vfD ls test
+
+run-parse:
+	avocet -vfD parse test

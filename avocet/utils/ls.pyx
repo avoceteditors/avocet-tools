@@ -121,8 +121,11 @@ cdef void run(object args):
     logger.info("Called ls operation")
 
     cdef list paths = find(args.source, args.working_dir)
+    cdef list clean_paths = []
 
     cdef fs.FileType path
 
     for path in paths:
-        print(path)
+        clean_paths.append(str(path))
+
+    print("\n".join(clean_paths))

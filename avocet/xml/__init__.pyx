@@ -28,60 +28,46 @@
 ##############################################################################
 
 # Module Imports
-import datetime
+import lxml.etree
+import sys
 
-####################### FILETYPE CONFIGURATION ##################################
-cdef class FileType(object):
+# Local Imports
+cimport avocet.xml.stat as stat
+cimport avocet.xml.common as com
 
-    def __init__(object self, object path):
-        self.path = path.absolute()
-        self.suffix = path.suffix
-        self.base = path.stem
-        self.parent = path.parent
+# Configure Logging
+from logging import getLogger
+logger = getLogger(__name__)
 
-        # Update Metadata
-        self.update()
+cdef void compile(object src, object output, str default_quotes):
+    """Compiles an XML file into a single cache target"""
 
-    def __repr__(object self):
-            return f"{self.__class__.__name__}: {str(self.path)}"
+    # Initialize Doc
+    try:
+        doc = lxml.etree.parse(str(src))
+        doc.xinclude()
 
-    def __str__(object self):
-        return "\n  ".join(
-            [f"{self.__class__.__name__}: {str(self.path)}",
-             f"Name:                 {self.base}",
-             f"Parent:               {str(self.parent)}",
-             f"Last Modified (Unix): {self.stat_mtime}",
-             f"Last Modified (Date): {self.mtime}",
-             f"Size (File System):   {self.stat_size}B",
-             f"Size (Readable):      {self.size}"
-             ])
+    except Exception as e:
+        logger.critical(f"Unable to parse XML source: {e}")
+        sys.exit(1)
 
-    def check(object self):
-        return self.path.stat().st_mtime > self.mtime 
+    # Fetch Element
+    element = doc.getroot()
+    stat.set_system_data(element, src)
 
-    def update(object self):
+    # Process dion:includes
+    for dinc in com.xpath(element, com.dincs):
+        com.process_dincs(dinc, src)
 
-        stat = self.path.stat()
+    # Process Quotes
+    com.process_quotes(element, default_quotes)
+ 
+    # Configure Output
+    out = output.joinpath(src.name)
+    logger.debug(f"Output set: {str(out)}")
 
-        # Set Last Modified
-        self.stat_mtime = stat.st_mtime
-        date = datetime.datetime.fromtimestamp(self.stat_mtime)
-        self.mtime = date.strftime("%A, %B %d, %Y")
-        self.year = date.strftime("%Y")
+    with open(out, "wb") as f:
+        f.write(lxml.etree.tostring(element))
 
-        # File Size
-        self.stat_size = stat.st_size
 
-        cdef float size
-        cdef str unit
-        if self.stat_size > 1000000:
-            size = 1000000 / self.stat_size
-            unit = "MB"
-        elif self.stat_size > 1000:
-            size = 1000 / self.stat_size
-            unit = "KB"
-        else:
-            size = self.stat_size
-            unit = "B"
-
-        self.size = f"{int(size)}{unit}"
+   

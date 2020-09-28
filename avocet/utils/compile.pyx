@@ -28,60 +28,41 @@
 ##############################################################################
 
 # Module Imports
-import datetime
+import pathlib
+import sys
 
-####################### FILETYPE CONFIGURATION ##################################
-cdef class FileType(object):
+# Local Imports
+from avocet.xml cimport compile as xml_compile
 
-    def __init__(object self, object path):
-        self.path = path.absolute()
-        self.suffix = path.suffix
-        self.base = path.stem
-        self.parent = path.parent
+# Configure Logger
+from logging import getLogger
+logger = getLogger(__name__)
 
-        # Update Metadata
-        self.update()
+cdef void run(object args):
+    """Runs main process called from command-line"""
+    logger.info("Called compile operation")
 
-    def __repr__(object self):
-            return f"{self.__class__.__name__}: {str(self.path)}"
+    src = pathlib.Path(args.source)
+    bld = pathlib.Path(args.output)
 
-    def __str__(object self):
-        return "\n  ".join(
-            [f"{self.__class__.__name__}: {str(self.path)}",
-             f"Name:                 {self.base}",
-             f"Parent:               {str(self.parent)}",
-             f"Last Modified (Unix): {self.stat_mtime}",
-             f"Last Modified (Date): {self.mtime}",
-             f"Size (File System):   {self.stat_size}B",
-             f"Size (Readable):      {self.size}"
-             ])
+    if src.exists():
 
-    def check(object self):
-        return self.path.stat().st_mtime > self.mtime 
+        if src.is_file():
+            if src.suffix in [".xml", ".docbook", ".dion"]:
+                logger.debug("Compiling XML File")
 
-    def update(object self):
+                bld = bld.joinpath("xml")
+                if not bld.exists():
+                    logger.info(f"Creating output directory: {str(bld)}")
+                    bld.mkdir(parents=True)
 
-        stat = self.path.stat()
+                xml_compile(src, bld, args.quotes)
 
-        # Set Last Modified
-        self.stat_mtime = stat.st_mtime
-        date = datetime.datetime.fromtimestamp(self.stat_mtime)
-        self.mtime = date.strftime("%A, %B %d, %Y")
-        self.year = date.strftime("%Y")
-
-        # File Size
-        self.stat_size = stat.st_size
-
-        cdef float size
-        cdef str unit
-        if self.stat_size > 1000000:
-            size = 1000000 / self.stat_size
-            unit = "MB"
-        elif self.stat_size > 1000:
-            size = 1000 / self.stat_size
-            unit = "KB"
-        else:
-            size = self.stat_size
-            unit = "B"
-
-        self.size = f"{int(size)}{unit}"
+            else:
+                logger.warning(f"Unknown file type {src.suffix}")
+        elif src.is_dir():
+            logger.critical("Avocet currently does not support compiling directories")
+            sys.exit(1)
+    else:
+        logger.critical("Non-existent source path")
+        sys.exit(1)

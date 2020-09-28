@@ -35,6 +35,8 @@ from pkg_resources import get_distribution
 
 # Local Imports
 from avocet.utils cimport ls
+from avocet.utils cimport parse
+from avocet.utils cimport compile
 
 #################### APPLICATION METADATA ######################
 cdef str prog = "Avocet"
@@ -78,6 +80,11 @@ cpdef void main():
         "-D", "--debug", action="store_true",
         help="Enables debugging information in logging messages")
 
+    # Output
+    opts.add_argument(
+        "-o", "--output", default="build",
+        help="Specifies the output directory")
+
     # Verbosity
     opts.add_argument(
         "-v", "--verbose", action="store_true",
@@ -85,6 +92,21 @@ cpdef void main():
 
     ################# COMMANDS #######################
     cmds = parser.add_subparsers(title="Commands", help="Command you want to execute")
+
+    # Compile XML
+    cmd_compile = cmds.add_parser(
+        "compile",
+        help="Compiles source files into single XML file")
+    cmd_compile.set_defaults(func=compile.run)
+
+    cmd_compile.add_argument(
+        "-Q", "--quotes", choices=["single", "double", "emdash", "none"], default="double",
+        help="Configures default quotation marks to use in text")
+    cmd_compile.add_argument(
+        "source",
+        help="Specifies the source file to compile")
+
+                             
 
     # Show Files 
     cmd_ls = cmds.add_parser(
@@ -95,11 +117,11 @@ cpdef void main():
     cmd_ls.add_argument("source", nargs="*", help="Specifies files to read")
 
     # Parse Command
-    #cmd_parse = cmds.add_parser(
-    #    "parse",
-    #    help="Parse the given files into data objects")
-    #cmd_parse.set_defaults(func=parse.run)
-    #cmd_parse.add_argument("source", nargs="*", help="Specifies files to read")
+    cmd_parse = cmds.add_parser(
+        "parse",
+        help="Parse the given files into data objects")
+    cmd_parse.set_defaults(func=parse.run)
+    cmd_parse.add_argument("source", nargs="*", help="Specifies files to read")
 
     # Version Command
     cmd_ver = cmds.add_parser(

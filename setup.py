@@ -7,7 +7,8 @@ import pathlib
 # Configure Packages
 packages = [
     "avocet",
-    "avocet.utils"
+    "avocet.utils",
+    "avocet.xml"
 ]
 package_dirs = {}
 exts = []
