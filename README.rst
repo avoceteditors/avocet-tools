@@ -20,6 +20,20 @@ Usage
 
 Avocet Tools are called from the command-line through the ``avocet`` interface.
 
+``compile``
+===========
+
+The ``compile`` operation is intended to compile a document tree into a single document file.  It currently **only** supports XML files and specifically DocBook XML files augmented by custom elements in the Dion specification.
+
+Note that the Dion specification currently does not support XML validation, but will in the future (likely through RELAX-NG).
+
+.. code-block:: console
+
+   $ avocet compile project.xml
+
+Avocet collects the relevant XML files and generates a file with the same name in the output directory under ``xml/``, (that is, it would generate a ``build/xml/project.xml`` file, by default).
+
+
 ``ls``
 =======
 

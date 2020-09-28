@@ -66,8 +66,8 @@ cdef void compile(object src, object output, str default_quotes):
     out = output.joinpath(src.name)
     logger.debug(f"Output set: {str(out)}")
 
-    with open(out, "wb") as f:
-        f.write(lxml.etree.tostring(element))
+    doc.write(str(out), pretty_print=True)
+
 
 
    
