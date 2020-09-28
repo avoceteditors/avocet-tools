@@ -33,6 +33,9 @@ Note that the Dion specification currently does not support XML validation, but 
 
 Avocet collects the relevant XML files and generates a file with the same name in the output directory under ``xml/``, (that is, it would generate a ``build/xml/project.xml`` file, by default).
 
+This method is preferred over XInclude given that it collects and sets file system-level metadata on the file root elements as they are added.  This metadata is in turn used by other Avocet processes.
+
+Additional features and preprocessing tasks will be added at a later date.
 
 ``ls``
 =======
