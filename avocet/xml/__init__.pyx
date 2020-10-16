@@ -29,6 +29,7 @@
 
 # Module Imports
 import lxml.etree
+import pathlib
 import sys
 
 # Local Imports
@@ -59,15 +60,13 @@ cdef void compile(object src, object output, str default_quotes):
     for dinc in com.xpath(element, com.dincs):
         com.process_dincs(dinc, src)
 
+    # Process Sections
+    com.process_sections(element)
     # Process Quotes
     com.process_quotes(element, default_quotes)
  
     # Configure Output
-    out = output.joinpath(src.name)
-    logger.debug(f"Output set: {str(out)}")
+    doc.write(str(output), pretty_print=True)
 
-    doc.write(str(out), pretty_print=True)
+    logger.info(f"Output written to: {str(output)}")
 
-
-
-   

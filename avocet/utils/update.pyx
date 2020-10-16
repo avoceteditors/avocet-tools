@@ -32,40 +32,20 @@ import pathlib
 import sys
 
 # Local Imports
-from avocet.xml cimport compile as xml_compile
+from avocet.xml cimport update
 
 # Configure Logger
 from logging import getLogger
 logger = getLogger(__name__)
 
-cdef void run(object args):
-    """Runs main process called from command-line"""
-    logger.info("Called compile operation")
+cdef void run(args):
+    """Rereads Cached XML file to perform in-place updates."""
+    logger.info("Called update operation")
 
     src = pathlib.Path(args.source)
-    bld = pathlib.Path(args.output)
 
     if src.exists():
-
-        if src.is_file():
-            if src.suffix in [".xml", ".docbook", ".dion"]:
-                logger.debug("Compiling XML File")
-
-                if not bld.parent.exists():
-                    logger.info(f"Creating output directory: {str(bld)}")
-                    bld.parent.mkdir(parents=True)
-                elif bld.is_dir():
-                    bld = bld.joinpath(src.name)
-                    if not bld.parent.exists():
-                        bld.parent.mkdir(parents=True)
-
-                xml_compile(src, bld, args.quotes)
-
-            else:
-                logger.warning(f"Unknown file type {src.suffix}")
-        elif src.is_dir():
-            logger.critical("Avocet currently does not support compiling directories")
-            sys.exit(1)
+        update.process(src)
     else:
-        logger.critical("Non-existent source path")
+        logger.critical(f"Non-existent source file: {str(src)}")
         sys.exit(1)

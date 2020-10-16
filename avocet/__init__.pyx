@@ -37,6 +37,9 @@ from pkg_resources import get_distribution
 from avocet.utils cimport ls
 from avocet.utils cimport parse
 from avocet.utils cimport compile
+from avocet.utils cimport server
+from avocet.utils cimport stat
+from avocet.utils cimport update
 
 #################### APPLICATION METADATA ######################
 cdef str prog = "Avocet"
@@ -85,6 +88,11 @@ cpdef void main():
         "-o", "--output", default="build",
         help="Specifies the output directory")
 
+    # Themes
+    opts.add_argument(
+        "-T", "--themes", default="themes",
+        help="Specifies directory containing theme information")
+
     # Verbosity
     opts.add_argument(
         "-v", "--verbose", action="store_true",
@@ -106,7 +114,17 @@ cpdef void main():
         "source",
         help="Specifies the source file to compile")
 
-                             
+
+    # Deps Command
+#    cmd_deps = cmds.add_parser(
+#        "deps",
+#        help="Updates the dependencies files for Make")
+#    cmd_deps.set_defaults(func=deps.run)
+#
+#    cmd_deps.add_argument(
+#        "source", default=None, nargs="?",
+#        help="Specifies the source file to compile")
+
 
     # Show Files 
     cmd_ls = cmds.add_parser(
@@ -123,6 +141,31 @@ cpdef void main():
     cmd_parse.set_defaults(func=parse.run)
     cmd_parse.add_argument("source", nargs="*", help="Specifies files to read")
 
+    # Show Information
+    cmd_stat = cmds.add_parser(
+        "stat",
+        help="Provides statistical information on project")
+    cmd_stat.set_defaults(func=stat.run)
+    cmd_stat.add_argument("source", help="Specifies the cached and updated file with document data")
+
+    # Update Information
+    cmd_update = cmds.add_parser(
+        "update",
+        help="Updates cache document in place for optional statistical tasks")
+    cmd_update.set_defaults(func=update.run)
+    cmd_update.add_argument("source", help="Specifies files to read")
+
+    # Server Command
+    cmd_server = cmds.add_parser(
+        "server",
+        help="Avocet service controls")
+    cmd_server.add_argument(
+        "operation", nargs="?",
+        choices=["start", "stop", "status"],
+        help="Server operation.")
+    cmd_server.set_defaults(func=server.run)
+
+
     # Version Command
     cmd_ver = cmds.add_parser(
         "version",
@@ -134,14 +177,17 @@ cpdef void main():
 
     if args.debug:
         log_level = logging.DEBUG
+
     elif args.verbose:
         log_level = logging.INFO
+
     else:
         log_level = logging.WARN
 
     coloredlogs.install(level=log_level)
 
-    ############### ENVIRONMENT ###########################
+
+   ############### ENVIRONMENT ###########################
     #cdef avocet.utils.env.Environment env = avocet.utils.env.Environment(args.working_dir)
     #env.configure(args.force)
 

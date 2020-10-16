@@ -28,44 +28,71 @@
 ##############################################################################
 
 # Module Imports
-import pathlib
+import lxml.etree
+import re
 import sys
 
 # Local Imports
-from avocet.xml cimport compile as xml_compile
+cimport avocet.xml.common as com
 
 # Configure Logger
 from logging import getLogger
 logger = getLogger(__name__)
 
-cdef void run(object args):
-    """Runs main process called from command-line"""
-    logger.info("Called compile operation")
+# ReGex 
+ws = re.compile("\s+")
 
-    src = pathlib.Path(args.source)
-    bld = pathlib.Path(args.output)
+# Process CTimes
+cdef void process_ctimes(element):
+    logger.debug("Processing file creation times")
 
-    if src.exists():
+    cdef str ctime
+    for e in com.xpath(element, com.dion_paths_root):
+        ctime = e.get(com.dion_ctime_attr)
+        if ctime is None:
+            path = e.get(com.dion_path)
+            logger.warning(f"Unspecified dion:ctime for: {path}")
 
-        if src.is_file():
-            if src.suffix in [".xml", ".docbook", ".dion"]:
-                logger.debug("Compiling XML File")
+# Process Counts
+cdef void process_counts(element):
+    logger.debug("Processing document statistics")
+    cdef int lines, words, chars 
+    cdef str text
 
-                if not bld.parent.exists():
-                    logger.info(f"Creating output directory: {str(bld)}")
-                    bld.parent.mkdir(parents=True)
-                elif bld.is_dir():
-                    bld = bld.joinpath(src.name)
-                    if not bld.parent.exists():
-                        bld.parent.mkdir(parents=True)
+    for sect in com.xpath(element, com.book_stat_sect):
+        lines = 0
+        words = 0
+        chars = 0
+        for para in com.xpath(sect, com.book_stat_para):
+            lines += 1
+            for text_element in com.xpath(para, com.book_stat_text):
+                text = str(text_element)
+                words += len(re.split(ws, text))
+                chars += len(re.sub(ws, "", text))
 
-                xml_compile(src, bld, args.quotes)
+        sect.set(com.dion_stat_lines, str(lines))
+        sect.set(com.dion_stat_words, str(words))
+        sect.set(com.dion_stat_chars, str(chars))
 
-            else:
-                logger.warning(f"Unknown file type {src.suffix}")
-        elif src.is_dir():
-            logger.critical("Avocet currently does not support compiling directories")
-            sys.exit(1)
-    else:
-        logger.critical("Non-existent source path")
+
+# Process Update
+cdef void process(path):
+
+    try:
+        doc = lxml.etree.parse(str(path))
+        
+    except Exception as e:
+        logger.critical(f"Unable to read cache file: {str(path)}")
         sys.exit(1)
+
+    element = doc.getroot()
+
+    # Check for CTimes
+    process_ctimes(element)
+
+    # Compile Counts
+    process_counts(element)
+
+
+    # Overwrite Text
+    doc.write(str(path), pretty_print=True)
