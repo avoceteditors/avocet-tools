@@ -123,15 +123,22 @@ cdef class Book:
         avg_chap_wc = self.add_leadspace(avg_chap_wc, lead)
         projected_cc = self.add_leadspace(projected_cc, lead)
 
-        contents = [
-            f"Book: {self.idref}",
-            f"Average Chapter Word Count: {avg_chap_wc}",
-            f"Projected Chapter Count:    {projected_cc}",
-            f"Projected Word Count:       {projected_wc}",
-            f"Current Word Count:         {current_wc}",
-            f"Current Progress:           {progress}"
-        ]
-
+        if verbose:
+            contents = [
+                f"Book: {self.idref}",
+                f"Average Chapter Word Count: {avg_chap_wc}",
+                f"Projected Chapter Count:    {projected_cc}",
+                f"Projected Word Count:       {projected_wc}",
+                f"Current Word Count:         {current_wc}",
+                f"Current Progress:           {progress}"
+            ]
+        else:
+            contents = [
+                f"Book: {self.idref}",
+                f"Projected Word Count: {projected_wc}",
+                f"Current Word Count:   {current_wc}",
+                f"Current Progress:     {progress}"
+            ]
         print("\n  ".join(contents))
 
             
