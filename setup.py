@@ -6,7 +6,8 @@ import pathlib
 
 # Configure Packages
 packages = [
-    "avocet"
+    "avocet",
+    "avocet.config"
 ]
 package_dirs = {}
 exts = []
@@ -37,7 +38,7 @@ setup(
     package_dir=package_dirs,
     packages=packages,
     #package_data={"avocet": ['avocet/data/*.sql']},
-    #ext_modules=cythonize(exts, language_level=3)
+    ext_modules=cythonize(exts, language_level=3)
 )
 
 
