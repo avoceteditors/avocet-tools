@@ -28,26 +28,44 @@
 ##############################################################################
 
 # Local Imports
-from avocet.config cimport files
-from avocet.source cimport *
-from avocet.config.config cimport *
-
-# Configure Logger
+from avocet.source cimport LaTeXData, YaMLData, RSTData, ResourceData
+# Logger Configuration
 from logging import getLogger
 logger = getLogger()
 
-cdef Config find_root(object path):
-    cdef Config config = Config(files.find_project(path))
-    return config
+############################ SOURCE CLASS #############################
+cdef class Source:
 
-cdef void run(args):
-    logger.info("Called config operation")
+    def __init__(self, path):
+        self.cwd = path
+        self.data_latex = {}
+        self.data_yaml = {}
+        self.data_rst = {}
+        self.data_other = {}
+        self.load_paths()
 
-    # Find the Working Directory
-    logger.debug("Updating working directory")
-    cdef Config config = find_root(args.working_dir)
-    print(config)
+    def __repr__(self):
+        return "\n\t".join([
+            f"<{self.__class__.__name__}>"
+            "<LaTeXSources>",
+                "   \n".join([""] ++ list(self.data_latex)),
+            "</LaTeXSources>",
+        ])
 
-
+    def load_paths(self):
+        for i in self.cwd.rglob("*"):
+            if i.is_file():
+                if i.suffix == ".tex":
+                    logger.debug("LaTeX Source File")
+                    self.data_latex[i] = LaTeXData(i)
+                elif i.suffix == ".yml":
+                    logger.debug("YaML Source File")
+                    self.data_yaml[i] = YaMLData(i)
+                elif i.suffix == ".rst":
+                    logger.debug("reStructuredText File")
+                    self.data_rst[i] = RSTData(i)
+                else:
+                    logger.debug(f"Unknown {i.suffix} resource file")
+                    self.data_other[i] = ResourceData(i)
 
 

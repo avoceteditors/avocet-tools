@@ -27,27 +27,14 @@
 # POSSIBILITY OF SUCH DAMAGE.
 ##############################################################################
 
-# Local Imports
-from avocet.config cimport files
-from avocet.source cimport *
-from avocet.config.config cimport *
+cdef class Source:
 
-# Configure Logger
-from logging import getLogger
-logger = getLogger()
-
-cdef Config find_root(object path):
-    cdef Config config = Config(files.find_project(path))
-    return config
-
-cdef void run(args):
-    logger.info("Called config operation")
-
-    # Find the Working Directory
-    logger.debug("Updating working directory")
-    cdef Config config = find_root(args.working_dir)
-    print(config)
+    def __init__(self, path):
+        self.cwd = path
+        self.load_paths()
 
 
-
-
+    def load_paths(self):
+        for i in self.cwd.rglob("*"):
+            if i.is_file():
+                print(i.suffix)

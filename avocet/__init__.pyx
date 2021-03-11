@@ -30,19 +30,22 @@
 # Module Imports
 import argparse
 import logging
+import pathlib
 
 from pkg_resources import get_distribution
 
 # Local Imports
 from avocet import compile
+cimport avocet.config
 
 ############################ VERSION REPORT ##################################
 
 cdef str prog = "avocet"
-cdef str byline = "Development Utilities for LaTeX writers"
+cdef str byline = "Development Utilities for Fiction Writers, Technical Writers, and Conlangers"
 cdef str author = "Kenneth P. J. Dyer <kenneth@avoceteditors.com>"
 cdef str comp = "Avocet Editorial Consulting"
-cdef str version = get_distribution("avocet").version
+cdef str version_avocet = get_distribution("avocet").version
+cdef str version_dion = get_distribution("dion").version
 
 cdef void report_version(object args):
     """Reports version and developer information to the command-line"""
@@ -54,11 +57,20 @@ cdef void report_version(object args):
     # Build Verbose Output
     if args.verbose:
 
-        content = [f"{prog.capitalize()} - {byline}", author, comp, f"Version {version}", "\n"]
+        content = [
+            f"{prog.capitalize()} - {byline}", 
+           author, 
+            comp, 
+            "Versions:",
+            f"- Avocet Tools           v.{version_avocet}", 
+            f"- Dion Text Processor    v.{version_dion}",
+            f"- Wulfila Language Tools v.None",
+            "\n"]
+
 
     # Build Non-verbose Output
     else:
-        content = [f"{prog} - version {version}"]
+        content = [f"{prog} - version {version_avocet}"]
     print("\n  ".join(content))
 
 cpdef void main():
@@ -78,6 +90,10 @@ cpdef void main():
         "-a", "--all", action="store_true",
         help="build all documents, chapters included")
 
+    opts.add_argument(
+        "-C", "--working-dir", default=".",
+        help="Forces certain operations")
+
     # Force
     opts.add_argument(
         "-f", "--force", action="store_true",
@@ -88,16 +104,6 @@ cpdef void main():
         "-D", "--debug", action="store_true",
         help="Enables debugging information in logging messages")
 
-    # Chapter Header
-    opts.add_argument(
-        "-H", "--head", default="head.tex",
-        help="Header file for use in rendering chapters")
-
-    # Lexica Path
-    opts.add_argument(
-        "-L", "--lexica", default=None,
-        help="Path for generating lexica")
-
     # Output
     opts.add_argument(
         "-o", "--output", default="./build",
@@ -106,6 +112,7 @@ cpdef void main():
     opts.add_argument("--chapters", action="store_true")
 
     opts.add_argument("-U", "--no-latex", action="store_true")
+
     # Verbosity
     opts.add_argument(
         "-v", "--verbose", action="store_true",
@@ -114,11 +121,16 @@ cpdef void main():
     ################# COMMANDS #####################
     cmds = parser.add_subparsers(title="Commands", help="Command you want to execute")
 
+    # Config Command
+    cmd_config = cmds.add_parser(
+        "config",
+        help="Finds the configuration file and reports on current data.")
+    cmd_config.set_defaults(func=avocet.config.run)
 
     # Compile LaTeX
     cmd_compile = cmds.add_parser(
         "compile",
-        help="Compiles source files into single XML file")
+        help="Compiles LaTeX documents into PDF")
     cmd_compile.set_defaults(func=compile.run)
 
     cmd_compile.add_argument(
@@ -145,6 +157,10 @@ cpdef void main():
 
     logging.basicConfig(format=log_format, level=log_level)
 
+    # Configure Pathlib
+    args.working_dir = pathlib.Path(args.working_dir).resolve()
+
+    # Run Application
     args.func(args)
 
 

@@ -27,27 +27,23 @@
 # POSSIBILITY OF SUCH DAMAGE.
 ##############################################################################
 
-# Local Imports
-from avocet.config cimport files
-from avocet.source cimport *
-from avocet.config.config cimport *
+# Module Import
+import sys
 
-# Configure Logger
+# Logger Configuration
 from logging import getLogger
 logger = getLogger()
 
-cdef Config find_root(object path):
-    cdef Config config = Config(files.find_project(path))
-    return config
+################### FIND PROJECT ROOT ############################
+cdef object find_project(path):
+    """Find the project path"""
+    project = path.joinpath("project.yml")
 
-cdef void run(args):
-    logger.info("Called config operation")
-
-    # Find the Working Directory
-    logger.debug("Updating working directory")
-    cdef Config config = find_root(args.working_dir)
-    print(config)
-
-
-
-
+    try:
+        if project.exists():
+            return path 
+        else:
+            return find_project(path.parent)
+    except:
+        logger.error("Invalid working directory")
+        sys.exit(1)

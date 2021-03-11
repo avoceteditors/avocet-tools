@@ -30,3 +30,6 @@ cython-clean:
 
 run-compile:
 	avocet -avD compile $(TGT) 
+
+test:
+	avocet -vDC ~/documents/lang compile

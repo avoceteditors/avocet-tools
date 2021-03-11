@@ -27,26 +27,65 @@
 # POSSIBILITY OF SUCH DAMAGE.
 ##############################################################################
 
-# Local Imports
-from avocet.config cimport files
-from avocet.source cimport *
-from avocet.config.config cimport *
+# Module Import
+import os.path 
+import yaml
 
-# Configure Logger
+# Local Imports
+from avocet.source cimport Source
+
+# Logger Configuration
 from logging import getLogger
 logger = getLogger()
 
-cdef Config find_root(object path):
-    cdef Config config = Config(files.find_project(path))
-    return config
+cdef class Config:
+    
+    def __init__(self, path):
+        self.cwd = path
 
-cdef void run(args):
-    logger.info("Called config operation")
+        with open(path.joinpath("project.yml"), "r") as f:
+            data = yaml.load(f.read(), Loader=yaml.SafeLoader)
 
-    # Find the Working Directory
-    logger.debug("Updating working directory")
-    cdef Config config = find_root(args.working_dir)
-    print(config)
+        self.set_paths(data)
+
+        if path.stat().st_mtime > self.source.stat().st_mtime:
+            logger.debug("Source directory more up to date")
+            self.src = Source(self.source)
+        else:
+            logger.debug("Project directory more up to date")
+            self.src = Source(self.source)
+
+    def set_paths(self, data):
+        """Configures paths for Config"""
+
+        # Configure Cache
+        self.cache = self.cwd.joinpath(".avocet")
+        if not self.cache.exists():
+            self.cache.mkdir(parents=True)
+
+        self.cache_source = self.cache.joinpath("source.db").resolve()
+
+        self.source = self.cwd.joinpath(data.get("source", "src")).resolve()
+        self.output = self.cwd.joinpath(data.get("output", "build")).resolve()
+        self.output_latex = self.output.joinpath("latex")
+        self.output_pdf = self.output.joinpath("pdf")
+
+        for i in [self.output, self.output_latex, self.output_pdf]:
+            if not i.exists():
+                i.mkdir(parents=True)
+
+    def __repr__(self):
+        cdef str src = str(os.path.relpath(self.source, self.cwd))
+        cdef str out = str(os.path.relpath(self.output, self.cwd))
+
+        return " ".join([
+            f"<{self.__class__.__name__}",
+            f'path="{self.cwd}"',
+            f'source="{src}"',
+            f'output="{out}/>"'
+        ])
+
+
 
 
 

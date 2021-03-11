@@ -27,27 +27,50 @@
 # POSSIBILITY OF SUCH DAMAGE.
 ##############################################################################
 
-# Local Imports
-from avocet.config cimport files
-from avocet.source cimport *
-from avocet.config.config cimport *
-
-# Configure Logger
-from logging import getLogger
-logger = getLogger()
-
-cdef Config find_root(object path):
-    cdef Config config = Config(files.find_project(path))
-    return config
-
-cdef void run(args):
-    logger.info("Called config operation")
-
-    # Find the Working Directory
-    logger.debug("Updating working directory")
-    cdef Config config = find_root(args.working_dir)
-    print(config)
+# Module Imports
+import yaml
 
 
+##################################### SUPERCLASSES #####################################
+cdef class DataFile:
 
+    def __init__(self, path):
+        self.path = path 
+        self.mtime = self.get_mtime()
+        self.content = None
+        self.mtimes = [self.mtime]
+
+    def get_mtime(self):
+        return self.path.stat().st_mtime
+
+    def check(self):
+        return self.path.stat().mtime > self.mtime
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} path='{str(self.path)}'>"
+
+    def read(self):
+        pass
+
+cdef class SourceData(DataFile):
+    def read(self):
+        with open(self.path, "r") as f:
+            self.content = f.read()
+
+cdef class ResourceData(DataFile):
+    pass
+
+cdef class LaTeXData(SourceData):
+    pass
+
+cdef class YaMLData(SourceData):
+
+    def read(self):
+        # Read Source Data
+        SourceData.read(self)
+
+        self.data = yaml.load(self.content, Loader=yaml.SafeLoader)
+
+cdef class RSTData(SourceData):
+    pass
 
