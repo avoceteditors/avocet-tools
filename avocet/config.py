@@ -28,43 +28,25 @@
 ##############################################################################
 
 # Module Import
-import os.path 
-import yaml
+import dion
+import dion.yml
+import os.path
+import sys
+import wulfila.lang
 
-# Local Imports
-from avocet.source cimport Source
 
-# Logger Configuration
+# Configure Logger
 from logging import getLogger
 logger = getLogger()
 
-cdef class Config:
-    
+class Config:
+
     def __init__(self, path):
         self.cwd = path
+        self.registry = wulfila.lang.Registry()
+        data = dion.yml.read(path.joinpath("project.yml"), True)
 
-        with open(path.joinpath("project.yml"), "r") as f:
-            data = yaml.load(f.read(), Loader=yaml.SafeLoader)
-
-        self.set_paths(data)
-
-        if path.stat().st_mtime > self.source.stat().st_mtime:
-            logger.debug("Source directory more up to date")
-            self.src = Source(self.source)
-        else:
-            logger.debug("Project directory more up to date")
-            self.src = Source(self.source)
-
-    def set_paths(self, data):
-        """Configures paths for Config"""
-
-        # Configure Cache
-        self.cache = self.cwd.joinpath(".avocet")
-        if not self.cache.exists():
-            self.cache.mkdir(parents=True)
-
-        self.cache_source = self.cache.joinpath("source.db").resolve()
-
+        # Set Paths
         self.source = self.cwd.joinpath(data.get("source", "src")).resolve()
         self.output = self.cwd.joinpath(data.get("output", "build")).resolve()
         self.output_latex = self.output.joinpath("latex")
@@ -74,19 +56,34 @@ cdef class Config:
             if not i.exists():
                 i.mkdir(parents=True)
 
+        self.src = dion.Source(self.source, self.registry)
+
+        self.src.update_registry()
+
     def __repr__(self):
-        cdef str src = str(os.path.relpath(self.source, self.cwd))
-        cdef str out = str(os.path.relpath(self.output, self.cwd))
+        src = str(os.path.relpath(self.source, self.cwd))
+        out = str(os.path.relpath(self.output, self.cwd))
 
         return " ".join([
             f"<{self.__class__.__name__}",
             f'path="{self.cwd}"',
             f'source="{src}"',
-            f'output="{out}/>"'
+            f'output="{out}"',
+            f'file_count={self.src}',
+            f'registry={list(self.registry.langs.values())}',
+            "/>"
         ])
 
 
+def find_root(path):
+    project = path.joinpath("project.yml")
 
-
-
+    try:
+        if project.exists():
+            return Config(path)
+        else:
+            return find_root(path.parent)
+    except Exception as e:
+        logger.error(f"Invalid working directroy: {e}")
+        sys.exit(1)
 

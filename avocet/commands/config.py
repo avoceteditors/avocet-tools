@@ -30,8 +30,14 @@
 from logging import getLogger
 logger = getLogger()
 
+import avocet.config
+
 def run(args):
     """Runs the config operation to report the basic
     configuration information and output"""
     logger.info("Called config operation")
+
+    conf = avocet.config.find_root(args.working_dir)
+    print(conf)
+
 

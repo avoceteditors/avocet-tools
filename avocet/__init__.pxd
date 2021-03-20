@@ -1,1 +1,0 @@
-cpdef inline void main()

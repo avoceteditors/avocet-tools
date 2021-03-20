@@ -7,10 +7,7 @@ import pathlib
 # Configure Packages
 packages = [
     "avocet",
-    "avocet.source",
-    "avocet.compile",
-    "avocet.config",
-    "avocet.document"
+    "avocet.commands",
 ]
 package_dirs = {}
 exts = []
@@ -36,12 +33,12 @@ for i in scripts_path.glob('*'):
 
 setup(
     name="avocet",
-    version="2021.3",
+    version="2021.4",
     scripts=scripts,
     package_dir=package_dirs,
     packages=packages,
     #package_data={"avocet": ['avocet/data/*.sql']},
-    ext_modules=cythonize(exts, language_level=3)
+    #ext_modules=cythonize(exts, language_level=3)
 )
 
 

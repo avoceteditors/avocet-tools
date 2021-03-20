@@ -1,0 +1,61 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+Config	avocet/config.py	/^class Config:$/;"	c
+DataFile	avocet/common.py	/^class DataFile:$/;"	c
+Lexica	avocet/common.py	/^class Lexica:$/;"	c
+Lexicon	avocet/common.py	/^class Lexicon:$/;"	c
+Source	avocet/common.py	/^class Source:$/;"	c
+TeXFile	avocet/common.py	/^class TeXFile(DataFile):$/;"	c
+VowelChart	avocet/lang.py	/^class VowelChart:$/;"	c
+__init__	avocet/common.py	/^    def __init__(self):$/;"	m	class:Lexica
+__init__	avocet/common.py	/^    def __init__(self, config):$/;"	m	class:Source
+__init__	avocet/common.py	/^    def __init__(self, name):$/;"	m	class:Lexicon
+__init__	avocet/common.py	/^    def __init__(self, path, config):$/;"	m	class:DataFile
+__init__	avocet/config.py	/^    def __init__(self, path):$/;"	m	class:Config
+__init__	avocet/lang.py	/^    def __init__(self):$/;"	m	class:VowelChart
+__repr__	avocet/common.py	/^    def __repr__(self):$/;"	m	class:DataFile	file:
+__repr__	avocet/common.py	/^    def __repr__(self):$/;"	m	class:Source	file:
+__repr__	avocet/config.py	/^    def __repr__(self):$/;"	m	class:Config	file:
+add	avocet/common.py	/^    def add(self, data):$/;"	m	class:Lexica
+add	avocet/common.py	/^    def add(self, data):$/;"	m	class:Lexicon
+add	avocet/lang.py	/^    def add(self, vowel):$/;"	m	class:VowelChart
+add_tex	avocet/common.py	/^    def add_tex(self, path):$/;"	m	class:Source
+chap_pattern	avocet/common.py	/^chap_pattern = re.compile("^\\\\\\\\chapter\\\\*\\{(.*?)\\}", re.MULTILINE)$/;"	v
+chap_pattern	avocet/compile-old.py	/^chap_pattern = re.compile("^\\\\\\\\chapter\\\\*\\{.*?\\}|^\\\\\\\\chapter\\{.*?\\}")$/;"	v
+doc_pattern	avocet/common.py	/^doc_pattern = re.compile("^\\\\\\\\documentclass\\{book\\}|^\\\\\\\\documentclass\\[.*?\\]\\{book\\}")$/;"	v
+find_books	avocet/common.py	/^    def find_books(self):$/;"	m	class:Source
+find_root	avocet/config.py	/^def find_root(path):$/;"	f
+gen_lexica	avocet/common.py	/^def gen_lexica(config):$/;"	f
+generate	avocet/lang.py	/^    def generate(self):$/;"	m	class:VowelChart
+get_source	avocet/common.py	/^def get_source(config):$/;"	f
+get_yaml	avocet/common.py	/^def get_yaml(src):$/;"	f
+inc_pattern	avocet/common.py	/^inc_pattern = re.compile("^\\\\\\\\INCLUDE\\{(.*?)\\}")$/;"	v
+inclex_pattern	avocet/common.py	/^inclex_pattern = re.compile("^\\\\\\\\INCLUDELEXICON\\{(.*?)\\}")$/;"	v
+load	avocet/common.py	/^def load(path):$/;"	f
+logger	avocet/commands/config.py	/^logger = getLogger()$/;"	v
+logger	avocet/common.py	/^logger = getLogger()$/;"	v
+logger	avocet/compile-old.py	/^logger = getLogger()$/;"	v
+logger	avocet/config.py	/^logger = getLogger()$/;"	v
+logger	avocet/lang.py	/^logger = getLogger()$/;"	v
+newline	avocet/common.py	/^newline = re.compile("\\n")$/;"	v
+process_chapter	avocet/common.py	/^def process_chapter(source, tex, outtex):$/;"	f
+process_includes	avocet/common.py	/^    def process_includes(self, source, book, ):$/;"	m	class:TeXFile
+process_vowels	avocet/lang.py	/^def process_vowels(vowels):$/;"	f
+re_title	avocet/common.py	/^re_title = re.compile("^\\\\\\\\title\\{(.*?)\\}", re.MULTILINE)$/;"	v
+read	avocet/common.py	/^    def read(self):$/;"	m	class:DataFile
+read	avocet/common.py	/^    def read(self):$/;"	m	class:TeXFile
+read_file	avocet/common.py	/^    def read_file(self):$/;"	m	class:DataFile
+render_def	avocet/common.py	/^def render_def(text):$/;"	f
+render_gramm	avocet/common.py	/^def render_gramm(text):$/;"	f
+render_name	avocet/common.py	/^def render_name(text):$/;"	f
+render_notes	avocet/common.py	/^def render_notes(text):$/;"	f
+render_phone	avocet/common.py	/^def render_phone(text):$/;"	f
+reset_mtimes	avocet/common.py	/^    def reset_mtimes(self):$/;"	m	class:DataFile
+run	avocet/commands/config.py	/^def run(args):$/;"	f
+run	avocet/compile-old.py	/^def run(args):$/;"	f
+run	avocet/lang.py	/^def run(config, lang):$/;"	f
+thechap_pattern	avocet/common.py	/^thechap_pattern = re.compile("^\\\\\\\\chapter\\\\*\\{Chapter \\\\\\\\thechapter\\}")$/;"	v
