@@ -8,6 +8,7 @@ import pathlib
 packages = [
     "avocet",
     "avocet.commands",
+    "avocet.compile"
 ]
 package_dirs = {}
 exts = []

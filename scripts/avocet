@@ -35,7 +35,9 @@ import pathlib
 from pkg_resources import get_distribution
 
 # Local Imports
+import avocet.config
 import avocet.commands.config
+import avocet.commands.compile
 
 prog = "avocet"
 
@@ -79,6 +81,11 @@ parser.set_defaults(func=report_version)
 ################### OPTIONS ##################
 opts = parser.add_argument_group("Options")
 
+# Build All
+opts.add_argument(
+    "-a", "--all", action="store_true",
+    help="During compile, builds all PDF's rather than the most recent")
+
 # Working Directory
 opts.add_argument(
     "-C", "--working-dir", default=".",
@@ -97,6 +104,22 @@ opts.add_argument(
 
 #################### COMMANDS #################
 cmds = parser.add_subparsers(title="Commands", help="Commands you want to execute")
+
+# Compile Command
+cmd_comp = cmds.add_parser(
+    "compile",
+    help="Compiles source into a PDF document")
+cmd_comp.set_defaults(func=avocet.commands.compile.run)
+
+cmd_comp.add_argument(
+    "-n", "--no-latex", action="store_true",
+    help="Disables LaTeX processing")
+
+cmd_comp.add_argument(
+    "--engine", choices=["lualatex", "pdflatex", "xelatex"],
+    default="lualatex",
+    help="LaTeX engine to use in compiling documents")
+
 
 # Config Command
 cmd_conf = cmds.add_parser(
@@ -125,6 +148,9 @@ logging.basicConfig(format=log_format, level=log_level)
 
 # Configure Pathlib
 args.working_dir = pathlib.Path(args.working_dir).resolve()
+
+# Configure Avocet Data
+args.config = avocet.config.find_root(args.working_dir)
 
 # Run Application
 args.func(args)
