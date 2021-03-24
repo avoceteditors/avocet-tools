@@ -2,13 +2,13 @@
 
 TGT=~/documents/lang/project.yml
 
-all: install ctags
+dev: ctags build-dev
 
-install:
-	@python3 setup.py install --user --force 
+build-dev:
+	@scons debug=True
 
-clean: 
-	@python3 setup.py clean 
+trace:
+	@scons trace=True
 
 ctags:
-	ctags -R avocet
+	ctags -R src 

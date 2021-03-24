@@ -1,0 +1,44 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+AVOCET_CLI	src/cli.hpp	33;"	d
+AVOCET_CLI_CWD	src/cli/cwd.cpp	33;"	d	file:
+AVOCET_LOG_DEBUG	src/log/debug.cpp	32;"	d	file:
+AVOCET_LOG_DEFAULT	src/log/default.cpp	33;"	d	file:
+AVOCET_LOG_H	src/log.hpp	35;"	d
+AVOCET_LOG_LABELS	src/log/labels.cpp	34;"	d	file:
+AVOCET_LOG_TRACE	src/log/trace.cpp	33;"	d	file:
+DEBUG	src/log/debug.cpp	37;"	d	file:
+DEBUG	src/log/default.cpp	38;"	d	file:
+DEBUG	src/log/trace.cpp	38;"	d	file:
+DEBUG_INFO	src/log/labels.cpp	45;"	d	file:
+DEBUG_LABEL	src/log/labels.cpp	37;"	d	file:
+DEBUG_MSG	src/log/labels.cpp	43;"	d	file:
+ERROR	src/log/debug.cpp	40;"	d	file:
+ERROR	src/log/default.cpp	41;"	d	file:
+ERROR	src/log/trace.cpp	41;"	d	file:
+ERROR_LABEL	src/log/labels.cpp	40;"	d	file:
+FATAL	src/log/debug.cpp	41;"	d	file:
+FATAL	src/log/default.cpp	42;"	d	file:
+FATAL	src/log/trace.cpp	42;"	d	file:
+FATAL_LABEL	src/log/labels.cpp	41;"	d	file:
+INFO	src/log/debug.cpp	38;"	d	file:
+INFO	src/log/default.cpp	39;"	d	file:
+INFO	src/log/trace.cpp	39;"	d	file:
+INFO_LABEL	src/log/labels.cpp	38;"	d	file:
+TRACE	src/log/debug.cpp	36;"	d	file:
+TRACE	src/log/default.cpp	37;"	d	file:
+TRACE	src/log/trace.cpp	37;"	d	file:
+TRACE_INFO	src/log/labels.cpp	46;"	d	file:
+TRACE_LABEL	src/log/labels.cpp	36;"	d	file:
+TRACE_MSG	src/log/labels.cpp	44;"	d	file:
+WARN	src/log/debug.cpp	39;"	d	file:
+WARN	src/log/default.cpp	40;"	d	file:
+WARN	src/log/trace.cpp	40;"	d	file:
+WARN_LABEL	src/log/labels.cpp	39;"	d	file:
+get_cwd	src/cli/cwd.cpp	/^boost::filesystem::path get_cwd(std::string pathArg){$/;"	f
+get_project	src/cli/cwd.cpp	/^boost::filesystem::path get_project(boost::filesystem::path p){$/;"	f
+main	src/avocet.cpp	/^int main(int argc, char** argv){$/;"	f
