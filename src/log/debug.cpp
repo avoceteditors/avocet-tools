@@ -34,11 +34,11 @@
 #include"labels.cpp"
 
 #define TRACE(msg)
-#define DEBUG(msg) std::cout << DEBUG_LABEL << msg << DEBUG_INFO << std::endl
-#define INFO(msg)  std::cout << INFO_LABEL  << msg << DEBUG_INFO << std::endl
-#define WARN(msg)  std::cout << WARN_LABEL  << msg << DEBUG_INFO << std::endl
-#define ERROR(msg) std::cout << ERROR_LABEL << msg << DEBUG_INFO << std::endl
-#define FATAL(msg) std::cout << FATAL_LABEL << msg << DEBUG_INFO <<std::endl
+#define DEBUG(msg) std::cerr << DEBUG_LABEL << msg << DEBUG_INFO << std::endl
+#define INFO(msg)  std::cerr << INFO_LABEL  << msg << DEBUG_INFO << std::endl
+#define WARN(msg)  std::cerr << WARN_LABEL  << msg << DEBUG_INFO << std::endl
+#define ERROR(msg) std::cerr << ERROR_LABEL << msg << DEBUG_INFO << std::endl
+#define FATAL(msg) std::cerr << FATAL_LABEL << msg << DEBUG_INFO <<std::endl
 
 
 

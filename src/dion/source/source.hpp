@@ -1,5 +1,5 @@
 /************************************************************************************
- * trace.cpp - Provides macros for trace logging.
+ *
  ************************************************************************************
  * Copyright (c) 2021, Kenneth P. J. Dyer <kenneth@avoceteditors.com>
  * All rights reserved.
@@ -29,16 +29,32 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ************************************************************************************/
 
-#ifndef AVOCET_LOG_TRACE
-#define AVOCET_LOG_TRACE
+#ifndef DION_SOURCE_SOURCEFILE
+#define DION_SOURCE_SOURCEFILE
 
-#include"labels.cpp"
+#include"file.hpp"
+class SourceFile : public File {
 
-#define TRACE(msg) std::cerr << TRACE_LABEL << msg << TRACE_INFO << std::endl
-#define DEBUG(msg) std::cerr << DEBUG_LABEL << msg << TRACE_INFO << std::endl
-#define INFO(msg)  std::cerr << INFO_LABEL  << msg << TRACE_INFO << std::endl
-#define WARN(msg)  std::cerr << WARN_LABEL  << msg << TRACE_INFO << std::endl
-#define ERROR(msg) std::cerr << ERROR_LABEL << msg << TRACE_INFO << std::endl
-#define FATAL(msg) std::cerr << FATAL_LABEL << msg << TRACE_INFO <<std::endl
+    public:
+        // Members
+        std::string raw_content, content;
+        bool doc, chapter;
 
+        // Constructor
+        SourceFile(void) : File{}{}
+        SourceFile(boost::filesystem::path path) : File{path}{
+            TRACE("Initialize Document Types");
+            this->doc = false;
+            this->chapter = false;
+
+            TRACE("Reading Content into Source Instance");
+            std::ifstream is(path.string());
+            if(!is.is_open()){
+                ERROR("Unable to open file: " << path.string());
+                this->valid = false;
+            }
+            this->raw_content = Glib::ustring((std::istreambuf_iterator<gchar>(is)), std::istreambuf_iterator<gchar>());
+            this->content = this->raw_content;
+        }
+};
 #endif

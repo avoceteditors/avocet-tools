@@ -37,8 +37,8 @@
 #define TRACE(msg)
 #define DEBUG(msg)
 #define INFO(msg)
-#define WARN(msg) std::cout << WARN_LABEL << msg << std::endl
-#define ERROR(msg) std::cout << ERROR_LABEL << msg << std::endl
-#define FATAL(msg) std::cout << FATAL_LABEL << msg << std::endl
+#define WARN(msg) std::cerr << WARN_LABEL << msg << std::endl
+#define ERROR(msg) std::cerr << ERROR_LABEL << msg << std::endl
+#define FATAL(msg) std::cerr << FATAL_LABEL << msg << std::endl
 
 #endif

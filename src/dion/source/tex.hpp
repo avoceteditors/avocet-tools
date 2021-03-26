@@ -1,5 +1,5 @@
 /************************************************************************************
- * trace.cpp - Provides macros for trace logging.
+ *
  ************************************************************************************
  * Copyright (c) 2021, Kenneth P. J. Dyer <kenneth@avoceteditors.com>
  * All rights reserved.
@@ -29,16 +29,46 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ************************************************************************************/
 
-#ifndef AVOCET_LOG_TRACE
-#define AVOCET_LOG_TRACE
+#ifndef DION_SOURCE_LATEXFILE
+#define DION_SOURCE_LATEXFILE
 
-#include"labels.cpp"
+#include"source.hpp"
 
-#define TRACE(msg) std::cerr << TRACE_LABEL << msg << TRACE_INFO << std::endl
-#define DEBUG(msg) std::cerr << DEBUG_LABEL << msg << TRACE_INFO << std::endl
-#define INFO(msg)  std::cerr << INFO_LABEL  << msg << TRACE_INFO << std::endl
-#define WARN(msg)  std::cerr << WARN_LABEL  << msg << TRACE_INFO << std::endl
-#define ERROR(msg) std::cerr << ERROR_LABEL << msg << TRACE_INFO << std::endl
-#define FATAL(msg) std::cerr << FATAL_LABEL << msg << TRACE_INFO <<std::endl
+class LaTeXSource : public SourceFile {
 
+    public:
+
+        // Members
+        bool contains_include;
+        bool contains_lexicon_include;
+
+        // Constructors
+        LaTeXSource(void) : SourceFile{}{}
+        LaTeXSource(boost::filesystem::path path) : SourceFile{path}{
+
+            // Init Members 
+            TRACE("Initialize include status");
+            this->contains_include = false;
+            this->contains_lexicon_include = false;
+
+            TRACE("Preparing Regex for File Scan");
+            std::sregex_token_iterator iter(this->content.begin(), this->content.end(), re_newline, -1);
+            std::sregex_token_iterator end;
+
+            std::string line;
+            while (iter != end){
+                line = *iter;
+                if (std::regex_search(line, re_document)){
+                    this->doc = true;
+                } 
+
+                else if (std::regex_search(line, re_chapter)){
+                    this->chapter = true;
+                }
+                
+                // Increment
+                ++iter;
+            }
+        }
+};
 #endif

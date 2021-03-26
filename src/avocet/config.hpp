@@ -1,5 +1,6 @@
+
 /************************************************************************************
- * trace.cpp - Provides macros for trace logging.
+ *
  ************************************************************************************
  * Copyright (c) 2021, Kenneth P. J. Dyer <kenneth@avoceteditors.com>
  * All rights reserved.
@@ -28,17 +29,42 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  ************************************************************************************/
+#ifndef AVOCET_CONFIG
+#define AVOCET_CONFIG
+class Config {
 
-#ifndef AVOCET_LOG_TRACE
-#define AVOCET_LOG_TRACE
+    public:
 
-#include"labels.cpp"
+        // Members
+        boost::filesystem::path cwd;
+        boost::filesystem::path src;
+        boost::filesystem::path out;
+        boost::filesystem::path out_latex;
+        boost::filesystem::path out_pdf;
+        boost::filesystem::path out_html;
 
-#define TRACE(msg) std::cerr << TRACE_LABEL << msg << TRACE_INFO << std::endl
-#define DEBUG(msg) std::cerr << DEBUG_LABEL << msg << TRACE_INFO << std::endl
-#define INFO(msg)  std::cerr << INFO_LABEL  << msg << TRACE_INFO << std::endl
-#define WARN(msg)  std::cerr << WARN_LABEL  << msg << TRACE_INFO << std::endl
-#define ERROR(msg) std::cerr << ERROR_LABEL << msg << TRACE_INFO << std::endl
-#define FATAL(msg) std::cerr << FATAL_LABEL << msg << TRACE_INFO <<std::endl
+        std::map<boost::filesystem::path, Dion::LaTeXSource> data_tex;
+        std::map<boost::filesystem::path, Dion::YaMLSource> data_yml;
+        std::map<boost::filesystem::path, Dion::File> data_other;
 
+        // Constructors
+        Config(){}
+        Config(
+            boost::filesystem::path cwdArg,
+            boost::filesystem::path srcArg,
+            boost::filesystem::path outArg,
+            boost::filesystem::path outLatexArg,
+            boost::filesystem::path outPDFArg,
+            boost::filesystem::path outHTMLArg){
+            this->cwd = cwdArg;
+            this->src = srcArg;
+            this->out = outArg;
+            this->out_latex = outLatexArg;
+            this->out_pdf = outPDFArg;
+            this->out_html = outHTMLArg;
+        }
+
+};
+
+#include"config.cpp"
 #endif

@@ -1,5 +1,5 @@
 /************************************************************************************
- * trace.cpp - Provides macros for trace logging.
+ *
  ************************************************************************************
  * Copyright (c) 2021, Kenneth P. J. Dyer <kenneth@avoceteditors.com>
  * All rights reserved.
@@ -28,17 +28,9 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  ************************************************************************************/
+#ifndef AVOCET_LANG_HPP
+#define AVOCET_LANG_HPP
 
-#ifndef AVOCET_LOG_TRACE
-#define AVOCET_LOG_TRACE
 
-#include"labels.cpp"
-
-#define TRACE(msg) std::cerr << TRACE_LABEL << msg << TRACE_INFO << std::endl
-#define DEBUG(msg) std::cerr << DEBUG_LABEL << msg << TRACE_INFO << std::endl
-#define INFO(msg)  std::cerr << INFO_LABEL  << msg << TRACE_INFO << std::endl
-#define WARN(msg)  std::cerr << WARN_LABEL  << msg << TRACE_INFO << std::endl
-#define ERROR(msg) std::cerr << ERROR_LABEL << msg << TRACE_INFO << std::endl
-#define FATAL(msg) std::cerr << FATAL_LABEL << msg << TRACE_INFO <<std::endl
 
 #endif

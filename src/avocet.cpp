@@ -28,16 +28,9 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  ************************************************************************************/
-
-// System Includes
-#include<iostream>
-#include<tclap/CmdLine.h>
-#include<boost/filesystem.hpp>
-
-// Local Includes
-#include"log.hpp"
-#include"cli.hpp"
-
+// Dependencies
+#include"deps.hpp"
+#include"avocet.hpp"
 
 int main(int argc, char** argv){
     INFO("Starting Avocet");
@@ -63,11 +56,9 @@ int main(int argc, char** argv){
         cmd.parse(argc, argv);
         TRACE("Done");
 
-        // Extract Values
-        boost::filesystem::path cwd = get_cwd(cwdOpt.getValue());
-        boost::filesystem::path project = get_project(cwd);
-
-
+        TRACE("Initialize Application");
+        Avocet::init(cwdOpt.getValue());
+        TRACE("Done");
     }
 
     // Exceptions

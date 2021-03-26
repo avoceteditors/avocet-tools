@@ -4,19 +4,30 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
-AVOCET_CLI	src/cli.hpp	33;"	d
-AVOCET_CLI_CWD	src/cli/cwd.cpp	33;"	d	file:
+AVOCET_CONFIG	src/avocet/config.hpp	32;"	d
+AVOCET_LANG_HPP	src/avocet/lang.hpp	32;"	d
 AVOCET_LOG_DEBUG	src/log/debug.cpp	32;"	d	file:
 AVOCET_LOG_DEFAULT	src/log/default.cpp	33;"	d	file:
 AVOCET_LOG_H	src/log.hpp	35;"	d
 AVOCET_LOG_LABELS	src/log/labels.cpp	34;"	d	file:
 AVOCET_LOG_TRACE	src/log/trace.cpp	33;"	d	file:
+Avocet	src/avocet.hpp	/^namespace Avocet {$/;"	n
+Config	src/avocet/config.hpp	/^        Config($/;"	f	class:Config
+Config	src/avocet/config.hpp	/^        Config(){}$/;"	f	class:Config
+Config	src/avocet/config.hpp	/^class Config {$/;"	c
 DEBUG	src/log/debug.cpp	37;"	d	file:
 DEBUG	src/log/default.cpp	38;"	d	file:
 DEBUG	src/log/trace.cpp	38;"	d	file:
 DEBUG_INFO	src/log/labels.cpp	45;"	d	file:
 DEBUG_LABEL	src/log/labels.cpp	37;"	d	file:
 DEBUG_MSG	src/log/labels.cpp	43;"	d	file:
+DION_REGEX_HPP	src/dion/regex.hpp	33;"	d
+DION_SOURCE	src/dion/source.hpp	33;"	d
+DION_SOURCE_FILE	src/dion/source/file.hpp	33;"	d
+DION_SOURCE_LATEXFILE	src/dion/source/tex.hpp	33;"	d
+DION_SOURCE_SOURCEFILE	src/dion/source/source.hpp	33;"	d
+DION_SOURCE_YAMLFILE	src/dion/source/yaml.hpp	32;"	d
+Dion	src/dion.hpp	/^namespace Dion {$/;"	n
 ERROR	src/log/debug.cpp	40;"	d	file:
 ERROR	src/log/default.cpp	41;"	d	file:
 ERROR	src/log/trace.cpp	41;"	d	file:
@@ -25,10 +36,21 @@ FATAL	src/log/debug.cpp	41;"	d	file:
 FATAL	src/log/default.cpp	42;"	d	file:
 FATAL	src/log/trace.cpp	42;"	d	file:
 FATAL_LABEL	src/log/labels.cpp	41;"	d	file:
+File	src/dion/source/file.hpp	/^        File(boost::filesystem::path p){$/;"	f	class:File
+File	src/dion/source/file.hpp	/^        File(void){}$/;"	f	class:File
+File	src/dion/source/file.hpp	/^class File {$/;"	c
 INFO	src/log/debug.cpp	38;"	d	file:
 INFO	src/log/default.cpp	39;"	d	file:
 INFO	src/log/trace.cpp	39;"	d	file:
 INFO_LABEL	src/log/labels.cpp	38;"	d	file:
+LaTeXSource	src/dion/source/tex.hpp	/^        LaTeXSource(boost::filesystem::path path) : SourceFile{path}{$/;"	f	class:LaTeXSource
+LaTeXSource	src/dion/source/tex.hpp	/^        LaTeXSource(void) : SourceFile{}{}$/;"	f	class:LaTeXSource
+LaTeXSource	src/dion/source/tex.hpp	/^class LaTeXSource : public SourceFile {$/;"	c
+Language	src/wulfila/lang.hpp	/^        Language(void){}$/;"	f	class:Language
+Language	src/wulfila/lang.hpp	/^class Language {$/;"	c
+SourceFile	src/dion/source/source.hpp	/^        SourceFile(boost::filesystem::path path) : File{path}{$/;"	f	class:SourceFile
+SourceFile	src/dion/source/source.hpp	/^        SourceFile(void) : File{}{}$/;"	f	class:SourceFile
+SourceFile	src/dion/source/source.hpp	/^class SourceFile : public File {$/;"	c
 TRACE	src/log/debug.cpp	36;"	d	file:
 TRACE	src/log/default.cpp	37;"	d	file:
 TRACE	src/log/trace.cpp	37;"	d	file:
@@ -39,6 +61,42 @@ WARN	src/log/debug.cpp	39;"	d	file:
 WARN	src/log/default.cpp	40;"	d	file:
 WARN	src/log/trace.cpp	40;"	d	file:
 WARN_LABEL	src/log/labels.cpp	39;"	d	file:
-get_cwd	src/cli/cwd.cpp	/^boost::filesystem::path get_cwd(std::string pathArg){$/;"	f
-get_project	src/cli/cwd.cpp	/^boost::filesystem::path get_project(boost::filesystem::path p){$/;"	f
+WULFILA_LANG_HPP	src/wulfila/lang.hpp	33;"	d
+Wulfila	src/wulfila.hpp	/^namespace Wulfila {$/;"	n
+YaMLSource	src/dion/source/yaml.hpp	/^        YaMLSource(boost::filesystem::path path) : SourceFile{path}{$/;"	f	class:YaMLSource
+YaMLSource	src/dion/source/yaml.hpp	/^        YaMLSource(void) : SourceFile{}{}$/;"	f	class:YaMLSource
+YaMLSource	src/dion/source/yaml.hpp	/^class YaMLSource : public SourceFile {$/;"	c
+append_source	src/avocet/config.cpp	/^Config append_source(Config config, boost::filesystem::path path){$/;"	f
+chapter	src/dion/source/source.hpp	/^        bool doc, chapter;$/;"	m	class:SourceFile
+config	src/avocet/config.cpp	/^static Config config;$/;"	v	file:
+contains_include	src/dion/source/tex.hpp	/^        bool contains_include;$/;"	m	class:LaTeXSource
+contains_lexicon_include	src/dion/source/tex.hpp	/^        bool contains_lexicon_include;$/;"	m	class:LaTeXSource
+content	src/dion/source/source.hpp	/^        std::string raw_content, content;$/;"	m	class:SourceFile
+cwd	src/avocet/config.hpp	/^        boost::filesystem::path cwd;$/;"	m	class:Config
+data_other	src/avocet/config.hpp	/^        std::map<boost::filesystem::path, Dion::File> data_other;$/;"	m	class:Config
+data_tex	src/avocet/config.hpp	/^        std::map<boost::filesystem::path, Dion::LaTeXSource> data_tex;$/;"	m	class:Config
+data_yml	src/avocet/config.hpp	/^        std::map<boost::filesystem::path, Dion::YaMLSource> data_yml;$/;"	m	class:Config
+doc	src/dion/source/source.hpp	/^        bool doc, chapter;$/;"	m	class:SourceFile
+ensure_outdir	src/avocet/config.cpp	/^boost::filesystem::path ensure_outdir(boost::filesystem::path path, std::string append){$/;"	f
+ensure_outdir	src/avocet/config.cpp	/^boost::filesystem::path ensure_outdir(std::string path, std::string append){$/;"	f
+get_project	src/avocet/config.cpp	/^boost::filesystem::path get_project(std::string cwdOpt){$/;"	f
+init	src/avocet/config.cpp	/^Config init(std::string cwdArg){$/;"	f
+load_langs	src/avocet/config.cpp	/^void load_langs(Config &config){$/;"	f
+load_source	src/avocet/config.cpp	/^Config load_source(Config config){$/;"	f
 main	src/avocet.cpp	/^int main(int argc, char** argv){$/;"	f
+name	src/dion/source/file.hpp	/^        std::string name;$/;"	m	class:File
+out	src/avocet/config.hpp	/^        boost::filesystem::path out;$/;"	m	class:Config
+out_html	src/avocet/config.hpp	/^        boost::filesystem::path out_html;$/;"	m	class:Config
+out_latex	src/avocet/config.hpp	/^        boost::filesystem::path out_latex;$/;"	m	class:Config
+out_pdf	src/avocet/config.hpp	/^        boost::filesystem::path out_pdf;$/;"	m	class:Config
+parent	src/dion/source/file.hpp	/^        boost::filesystem::path path, parent;$/;"	m	class:File
+path	src/dion/source/file.hpp	/^        boost::filesystem::path path, parent;$/;"	m	class:File
+raw	src/dion/source/yaml.hpp	/^        YAML::Node raw;$/;"	m	class:YaMLSource
+raw_content	src/dion/source/source.hpp	/^        std::string raw_content, content;$/;"	m	class:SourceFile
+re_chapter	src/dion/regex.hpp	/^std::regex re_chapter = std::regex("^\\\\\\\\chapter\\\\{.*?\\\\}");$/;"	v
+re_document	src/dion/regex.hpp	/^std::regex re_document = std::regex("^\\\\\\\\documentclass\\\\[.*?\\\\]\\\\{.*?\\\\}|\\\\\\\\documentclass\\\\{.*?\\\\}");$/;"	v
+re_newline	src/dion/regex.hpp	/^std::regex re_newline = std::regex("\\n");$/;"	v
+re_split	src/dion/regex.cpp	/^std::vector<std::string> re_split(std::string text, std::regex pattern){$/;"	f
+size	src/dion/source/file.hpp	/^        uintmax_t size;$/;"	m	class:File
+src	src/avocet/config.hpp	/^        boost::filesystem::path src;$/;"	m	class:Config
+valid	src/dion/source/file.hpp	/^        bool valid;$/;"	m	class:File

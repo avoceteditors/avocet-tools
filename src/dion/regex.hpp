@@ -1,5 +1,5 @@
 /************************************************************************************
- * trace.cpp - Provides macros for trace logging.
+ *
  ************************************************************************************
  * Copyright (c) 2021, Kenneth P. J. Dyer <kenneth@avoceteditors.com>
  * All rights reserved.
@@ -29,16 +29,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ************************************************************************************/
 
-#ifndef AVOCET_LOG_TRACE
-#define AVOCET_LOG_TRACE
+#ifndef DION_REGEX_HPP
+#define DION_REGEX_HPP
 
-#include"labels.cpp"
+/************************************ WHITESPACE *************************************/
+// Whitespace
+std::regex re_newline = std::regex("\n");
 
-#define TRACE(msg) std::cerr << TRACE_LABEL << msg << TRACE_INFO << std::endl
-#define DEBUG(msg) std::cerr << DEBUG_LABEL << msg << TRACE_INFO << std::endl
-#define INFO(msg)  std::cerr << INFO_LABEL  << msg << TRACE_INFO << std::endl
-#define WARN(msg)  std::cerr << WARN_LABEL  << msg << TRACE_INFO << std::endl
-#define ERROR(msg) std::cerr << ERROR_LABEL << msg << TRACE_INFO << std::endl
-#define FATAL(msg) std::cerr << FATAL_LABEL << msg << TRACE_INFO <<std::endl
+/************************************ LATEX *************************************/
+std::regex re_document = std::regex("^\\\\documentclass\\[.*?\\]\\{.*?\\}|\\\\documentclass\\{.*?\\}");
+std::regex re_chapter = std::regex("^\\\\chapter\\{.*?\\}");
 
+#include"regex.cpp"
 #endif

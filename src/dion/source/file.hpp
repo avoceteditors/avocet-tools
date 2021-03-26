@@ -1,5 +1,5 @@
 /************************************************************************************
- * cwd.cpp - Functions for finding the current working directory
+ *
  ************************************************************************************
  * Copyright (c) 2021, Kenneth P. J. Dyer <kenneth@avoceteditors.com>
  * All rights reserved.
@@ -29,58 +29,29 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ************************************************************************************/
 
-#ifndef AVOCET_CLI_CWD
-#define AVOCET_CLI_CWD
+#ifndef DION_SOURCE_FILE
+#define DION_SOURCE_FILE
 
-// System Includes
-#include<boost/filesystem.hpp>
+class File {
 
-// Local Include
-#include"../log.hpp"
+    public:
+        // Members
+        boost::filesystem::path path, parent;
+        std::string name;
+        bool valid;
 
-// Returns the current working directory as defined by CLI arg
-boost::filesystem::path get_cwd(std::string pathArg){
-    DEBUG("Finding working directory");
+        uintmax_t size;
 
-    // Extract Value
-    TRACE("Initialize Boost::Filesystem Path");
-    boost::filesystem::path cwd(pathArg);
-
-    // Check Exists
-    if (boost::filesystem::exists(cwd)){
-
-        TRACE("Make cwd a canonical path");
-        cwd = boost::filesystem::canonical(cwd);
-
-        if (boost::filesystem::is_directory(cwd)){
-            return cwd;
+        // Constructor
+        File(void){}
+        File(boost::filesystem::path p){
+            this->path = p;
+            this->parent = p.parent_path();
+            this->size = boost::filesystem::file_size(p);
+            this->name = p.stem().string();
+            this->valid = true;
         }
-        else {
-            FATAL("Working directory is a file: " << cwd.string());
-            EXIT_FAILURE;
-        }
-    }
-    else {
-        FATAL("Working directory does not exist: " << cwd.string());
-        EXIT_FAILURE;
-    }
-    return cwd;
-}
+};
 
-// Find project.yml path
-boost::filesystem::path get_project(boost::filesystem::path p){
-    TRACE("Path Argument: " << p.string());
-    boost::filesystem::path root("/");
-    while (root != p){
-        TRACE("Checking Directory for project.yml: " << p.string());
-        p /= "project.yml";
-        if (boost::filesystem::is_regular_file(p)){
-            return p;
-        }
-        p = p.parent_path().parent_path();
-    } 
-    FATAL("Unable to locate project.yml");
-    EXIT_FAILURE;
-    return p;
-}
+
 #endif

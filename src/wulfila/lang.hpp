@@ -1,5 +1,5 @@
 /************************************************************************************
- * cli.hpp - Common functions for CLI operations in Avocet Tools
+ *
  ************************************************************************************
  * Copyright (c) 2021, Kenneth P. J. Dyer <kenneth@avoceteditors.com>
  * All rights reserved.
@@ -29,9 +29,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ************************************************************************************/
 
-#ifndef AVOCET_CLI
-#define AVOCET_CLI
+#ifndef WULFILA_LANG_HPP
+#define WULFILA_LANG_HPP
+class Language {
 
-#include"cli/cwd.cpp"
+    public:
+        Language(void){}
+};
+
+
 
 #endif
