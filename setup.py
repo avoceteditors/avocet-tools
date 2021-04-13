@@ -3,43 +3,49 @@ from Cython.Build import cythonize
 
 import re
 import pathlib
+def find_packages(lib, pkgs, bin):
+    dirs = {}
+    exts = []
+    bins = []
+    for pkg in pkgs:
+        src = re.sub("\.", "/", pkg)
+        name = re.sub("\.", "-", pkg)
+        path = lib.joinpath(src)
 
-# Configure Packages
-packages = [
-    "avocet",
-    "avocet.commands",
-]
-package_dirs = {}
-exts = []
-for package in packages:
-    src = re.sub("\.", "/", package)
-    package_dirs[package] = src
+        if path.exists():
 
-    # Find Cython Extensions
-    path = pathlib.Path(src)
-    for i in path.rglob("*.pyx"):
-        exts.append(str(i))
+            # Add Package to Dirs
+            dirs[pkg] = src
 
-    for i in path.rglob("*.pxd"):
-        exts.append(str(i))
+            for i in path.glob("*.pxd"):
+                exts.append(str(i))
+            for i in path.glob("*.pyx"):
+                exts.append(str(i))
+        script = bin.joinpath(name)
 
-# Configure Scripts
-scripts_path = pathlib.Path("scripts")
-scripts = []
-for i in scripts_path.glob('*'):
-    if i.is_file():
-        scripts.append(str(i))
+        if script.exists():
+            bins.append(str(script))
 
+    return (pkgs, dirs, exts, bins) 
 
-setup(
-    name="avocet",
-    version="2021.4",
-    scripts=scripts,
-    package_dir=package_dirs,
-    packages=packages,
-    #package_data={"avocet": ['avocet/data/*.sql']},
-    #ext_modules=cythonize(exts, language_level=3)
-)
+lib = pathlib.Path("lib")
+bin = pathlib.Path("scripts")
+        
+# Setup Packages
+for modules in [
+        # Avocet
+        ["avocet", "avocet.commands"]
+]:
+    name = modules[0]
+    (pkgs, dirs, exts, bins) = find_packages(lib, modules, bin)
+    if exts == []:
+        setup(name=name,
+              version="2021.5",
+              scripts=bins,
+              package_dir=dirs)
+
+#package_data={"avocet": ['avocet/data/*.sql']},
+#ext_modules=cythonize(exts, language_level=3)
 
 
 
