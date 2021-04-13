@@ -28,21 +28,20 @@ def find_packages(lib, pkgs, bin):
 
     return (pkgs, dirs, exts, bins) 
 
-lib = pathlib.Path("lib")
-bin = pathlib.Path("scripts")
+lib = pathlib.Path("avocet")
+bin = pathlib.Path("../scripts")
         
 # Setup Packages
-for modules in [
-        # Avocet
-        ["avocet", "avocet.commands"]
-]:
-    name = modules[0]
-    (pkgs, dirs, exts, bins) = find_packages(lib, modules, bin)
-    if exts == []:
-        setup(name=name,
-              version="2021.5",
-              scripts=bins,
-              package_dir=dirs)
+modules = [
+    "avocet",
+    "avocet.commands"
+]
+(pkgs, dirs, exts, bins) = find_packages(lib, modules, bin)
+if exts == []:
+    setup(name="avocet",
+          version="2021.5",
+          scripts=bins,
+          package_dir=dirs)
 
 #package_data={"avocet": ['avocet/data/*.sql']},
 #ext_modules=cythonize(exts, language_level=3)

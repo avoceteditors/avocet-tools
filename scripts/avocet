@@ -1,4 +1,5 @@
-#!/usr/bin/env/python3
+#!/usr/bin/env python3 
+"""Command-line interface for the ``avocet`` tool."""
 ##############################################################################
 # Copyright (c) 2020, Kenneth P. J. Dyer <kenneth@avoceteditors.com>
 # All rights reserved.
@@ -31,26 +32,20 @@
 # Module Imports
 import argparse
 import logging
-import pathlib
-from pkg_resources import get_distribution
-
-# Local Imports
-import avocet.config
-import avocet.commands.config
-import avocet.commands.compile
-
-prog = "avocet"
+import pkg_resources
 
 ############################ VERSION REPORT ##################################
+prog = "avocet"
 def report_version(args):
     """Reports version and developer information to the command-line"""
 
     # Instantiate Variable
-    byline = "Development Utilities for Fiction Writers, Technical Writers, and Conlangers"
+    byline = "Reference Utilities for Conlangers"
     author = "Kenneth P. J. Dyer <kenneth@avoceteditors.com>"
     comp = "Avocet Editorial Consulting"
-    version_avocet = get_distribution("avocet").version
-    version_dion = get_distribution("dion").version
+    version_avocet = pkg_resources.get_distribution("avocet").version
+    version_dion = pkg_resources.get_distribution("dion").version
+    version_wulfila = pkg_resources.get_distribution("wulfila").version
 
     # Build Verbose Output
     if args.verbose:
@@ -62,96 +57,94 @@ def report_version(args):
             "Versions:",
             f"- Avocet Tools           v.{version_avocet}", 
             f"- Dion Text Processor    v.{version_dion}",
-            f"- Wulfila Language Tools v.None",
+            f"- Wulfila Language Tools v.{version_wulfila}",
             "\n"]
 
     # Build Non-verbose Output
     else:
-        content = [f"{prog} - version {version_avocet}"]
+        content = [f"{prog} - version {version_wulfila}"]
 
     print("\n  ".join(content))
 
+############################ VERSION REPORT ##################################
+def get_parser():
+    """Configures and returns argparse parser"""
 
-################################### ARGUMENT PARSER ##################################
-# Init Parser
-parser = argparse.ArgumentParser(
-    prog=prog)
-parser.set_defaults(func=report_version)
+    # Initialize Parser
+    parser = argparse.ArgumentParser(prog=prog)
+    parser.set_defaults(func=report_version)
 
-################### OPTIONS ##################
-opts = parser.add_argument_group("Options")
+    ########################## OPTIONS ####################################
+    dir_opts = parser.add_argument_group("Path Options")
 
-# Build All
-opts.add_argument(
-    "-a", "--all", action="store_true",
-    help="During compile, builds all PDF's rather than the most recent")
+    # Cache Option
+    dir_opts.add_argument(
+        "-c", "--cache", default=None,
+        help="Specifies the path to the cache file.\n\n"
+        "When using the default value for this option, "
+        f"``{prog}`` uses the ``-C, --cwd`` option to search for the project root. "
+        "Once the project root is found, it creates an ``.avocet`` file in that directory."
+    )
 
-# Working Directory
-opts.add_argument(
-    "-C", "--working-dir", default=".",
-    help="Forces certain operations")
+    # CWD Option
+    dir_opts.add_argument(
+        "-C", "--cwd", default=".", 
+        help="Specifies the working directory.\n\n"
+        "The working directory provides a starting point in locating the project root. "
+        f"``{prog}`` searches up from the working directory to locate the project root "
+        "(that is, the directory that contains the ``project.yml`` file).\n\n"
+        f"If ``{prog}`` fails to locate the project root, the application fails")
 
-# Debug
-opts.add_argument(
-    "-D", "--debug", action="store_true",
-    help="Enables debugging information in logging messages")
+    ####################### LOGGING OPTIONS #############################
+    log_opts = parser.add_argument_group(
+        "Logging Options",
+        "Provides options for configuring the logging output.")
 
-# Verbosity
-opts.add_argument(
-    "-v", "--verbose", action="store_true",
-    help="Enables verbosity in logging messages")
+    # Debug Option
+    log_opts.add_argument(
+        "-D", "--debug", action="store_true", 
+        help="Enables debugging information in log messages.\n\n"
+        "By default, logs print to stdout, providing the log level and message."
+        "When using this option, log messages also provide a parenthetical reference showing "
+        "the function name, filename, and line number.  This is useful for developers "
+        "who would like to identify the location from which the log was called."
+    )
 
+    # Verbose Option
+    log_opts.add_argument(
+        "-v", "--verbose", action="store_true", 
+        help="Enables increased verbosity from the logger.\n\n"
+        "When set alone, this option increases the logging level to include"
+    )
 
-#################### COMMANDS #################
-cmds = parser.add_subparsers(title="Commands", help="Commands you want to execute")
-
-# Compile Command
-cmd_comp = cmds.add_parser(
-    "compile",
-    help="Compiles source into a PDF document")
-cmd_comp.set_defaults(func=avocet.commands.compile.run)
-
-cmd_comp.add_argument(
-    "-n", "--no-latex", action="store_true",
-    help="Disables LaTeX processing")
-
-cmd_comp.add_argument(
-    "--engine", choices=["lualatex", "pdflatex", "xelatex"],
-    default="lualatex",
-    help="LaTeX engine to use in compiling documents")
+    ############################# COMMANDS #################################
 
 
-# Config Command
-cmd_conf = cmds.add_parser(
-    "config",
-    help="Reports on the current configuration of the application")
-cmd_conf.set_defaults(func=avocet.commands.config.run)
+    cmds = parser.add_subparsers(title="Commands", help=f"Specifies the operation ``{prog}`` performs")
 
-# Version Command
-cmd_ver = cmds.add_parser(
-    "version",
-    help="Reports version and developer information.")
+    cmd_Ver = cmds.add_parser("version", help="Reports build and version information")
+    return parser
 
-args = parser.parse_args()
+if __name__ == "__main__":
 
-################## LOGGING CONFIGURATION ###########
-log_format = "[%(levelname)s]: %(message)s"
-log_level = logging.WARN
+    # Parse Arguments
+    args = get_parser().parse_args()
 
-if args.debug:
-    log_level = logging.DEBUG
-    log_format = "[%(levelname)s]: %(message)s %(funcName)s in %(filename)s:%(lineno)d"
-elif args.verbose:
-    log_level = logging.INFO
+    # Logging Configuration
+    log_format = "[%(levelname)s]: %(message)s"
+    log_level = logging.WARN
 
-logging.basicConfig(format=log_format, level=log_level)
+    # Set Log Format
+    if args.debug:
+        log_format = "[%(levelname)s]: %(message)s (%(funcName)s in %(filename)s:%(lineno)d)"
 
-# Configure Pathlib
-args.working_dir = pathlib.Path(args.working_dir).resolve()
+    # Set Log Level
+    if args.verbose and args.debg:
+        log_level = logging.DEBUG
+    elif args.verbose:
+        log_level = logging.INFO
 
-# Configure Avocet Data
-args.config = avocet.config.find_root(args.working_dir)
+    logging.basicConfig(format=log_format, level=log_level)
 
-# Run Application
-args.func(args)
-
+    # Execute Function
+    args.func(args)

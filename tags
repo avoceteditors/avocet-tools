@@ -4,3 +4,12 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+bin	lib/setup-avocet.py	/^bin = pathlib.Path("..\/scripts")$/;"	v
+find_packages	lib/setup-avocet.py	/^def find_packages(lib, pkgs, bin):$/;"	f
+lib	lib/setup-avocet.py	/^lib = pathlib.Path("avocet")$/;"	v
+main	lib/avocet/__init__.py	/^def main():$/;"	f
+modules	lib/setup-avocet.py	/^modules = [$/;"	v
+package_dir	lib/setup-avocet.py	/^          package_dir=dirs)$/;"	v
+parse	lib/avocet/commands/__init__.py	/^def parse():$/;"	f
+scripts	lib/setup-avocet.py	/^          scripts=bins,$/;"	v
+version	lib/setup-avocet.py	/^          version="2021.5",$/;"	v
